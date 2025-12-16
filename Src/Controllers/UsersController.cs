@@ -19,7 +19,6 @@ public sealed class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserRequestDto request, CancellationToken ct)
     {
-        // Mapping manuel DTO -> Model
         var model = new User
         {
             Name = request.Name,
@@ -29,7 +28,6 @@ public sealed class UsersController : ControllerBase
 
         var created = await _users.CreateAsync(model, ct);
 
-        // Mapping manuel Model -> DTO
         var dto = MapToDto(created);
 
         return StatusCode(StatusCodes.Status201Created, dto);

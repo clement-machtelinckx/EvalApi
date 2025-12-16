@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB folder must exist before opening SQLite file
 Directory.CreateDirectory("Data");
 
 builder.Services.AddControllers();
@@ -29,24 +28,20 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Repos
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 
-// Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 
 var app = builder.Build();
 
-// Apply migrations at startup
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
 
-// Pipeline order (as required)
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors("Localhost3000");
 

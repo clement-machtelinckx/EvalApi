@@ -22,7 +22,6 @@ public sealed class PostService : IPostService
         if (!userExists)
             throw new NotFoundException($"User with id {routeUserId} not found");
 
-        // route/body check is done in controller (per spec)
         return await _posts.CreateAsync(post, ct);
     }
 
@@ -53,7 +52,6 @@ public sealed class PostService : IPostService
         if (existing.UserId != dtoUserId)
             throw new BadRequestException("userId does not match the post owner");
 
-        // Update ONLY title/body (per spec)
         var updated = await _posts.UpdateTitleBodyAsync(postId, title, body, ct);
         if (updated is null)
             throw new NotFoundException($"Post with id {postId} not found");
