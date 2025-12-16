@@ -1,6 +1,90 @@
-@EvalApi_HostAddress = http://localhost:5202
+@EvalApi_HostAddress = https://localhost:7035
 
-GET {{EvalApi_HostAddress}}/weatherforecast/
+### Health
+GET {{EvalApi_HostAddress}}/api/health
+Accept: text/plain
+
+### Create user
+POST {{EvalApi_HostAddress}}/api/users
+Content-Type: application/json
 Accept: application/json
 
-###
+{
+  "name": "Alice",
+  "username": "alice",
+  "email": "alice@example.com"
+}
+
+### List users
+GET {{EvalApi_HostAddress}}/api/users
+Accept: application/json
+
+### Create post for user 1 (OK)
+POST {{EvalApi_HostAddress}}/api/users/1/posts
+Content-Type: application/json
+Accept: application/json
+
+{
+  "userId": 1,
+  "title": "Hello",
+  "body": "First post"
+}
+
+### Create post mismatch route/body userId (400)
+POST {{EvalApi_HostAddress}}/api/users/1/posts
+Content-Type: application/json
+Accept: text/plain
+
+{
+  "userId": 2,
+  "title": "Mismatch",
+  "body": "Should be 400"
+}
+
+### List posts for user 1
+GET {{EvalApi_HostAddress}}/api/users/1/posts
+Accept: application/json
+
+### Get post 1
+GET {{EvalApi_HostAddress}}/api/posts/1
+Accept: application/json
+
+### Update post 1 (OK)
+PUT {{EvalApi_HostAddress}}/api/posts/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 1,
+  "userId": 1,
+  "title": "Updated title",
+  "body": "Updated body"
+}
+
+### Update post id mismatch (400)
+PUT {{EvalApi_HostAddress}}/api/posts/1
+Content-Type: application/json
+Accept: text/plain
+
+{
+  "id": 999,
+  "userId": 1,
+  "title": "Nope",
+  "body": "Nope"
+}
+
+### Update post userId mismatch vs DB owner (400)
+PUT {{EvalApi_HostAddress}}/api/posts/1
+Content-Type: application/json
+Accept: text/plain
+
+{
+  "id": 1,
+  "userId": 999,
+  "title": "Nope",
+  "body": "Nope"
+}
+
+### Delete post 1
+DELETE {{EvalApi_HostAddress}}/api/posts/1
+Accept: */*

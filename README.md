@@ -15,3 +15,4 @@ dotnet add EvalApi package Microsoft.EntityFrameworkCore.Design
 dotnet add EvalApi package Swashbuckle.AspNetCore
 
 dotnet tool install --global dotnet-ef
+```
